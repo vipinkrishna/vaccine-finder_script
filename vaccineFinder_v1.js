@@ -3,8 +3,13 @@
 // CopyLeft vipinkrishna - (Free Developer)
 
 (function () {
-  const pincodes = [671531]  //Enter your pincode(s) here! - Example: [671531, 671316]
 
+  // YOUR SETTINGS GOES HERE - PINCODES, AGE CATEGORY, DOSE
+  const pincodes = [671531]  //[671531]  //[671531, 671316]
+  let yourAgeCategory = 18  //18  //40  //45
+  let yourDose = "FIRST"  //"FIRST"  //"SECOND"
+
+  // PICKS DATES FROM TODAY UPTO 8 DAYS
   let today = new Date()
   const dates = []
   for (let i = 0; i < 8; i++) {
@@ -15,11 +20,10 @@
   let counter = 1
   let session_counter
 
-  let yourAgeCategory = 18
-  let yourDose = "FIRST"  //"FIRST" //"SECOND"
-
+  // DELAY FUNCTION
   const wait = (milliseconds) => new Promise((settle) => setTimeout(settle, milliseconds))
 
+  // GENERATES BEEP SOUND
   var audioCtx = new window.AudioContext
   function beep(duration = 500) {
     var oscillator = audioCtx.createOscillator()
@@ -45,7 +49,6 @@
       for (date of dates) {
         let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pincode + "&date=" + date
         let response = await fetch(endpoint)
-        // let result = await response.json()
         let { sessions } = await response.json()
 
         for (session of sessions) {
@@ -63,12 +66,12 @@
             console.log("================================================================\n\n\n\n\n")
             beep(2000)
             await wait(2000)  //SESSION
-          }
-        }
-      }
-    }
+          }  //IF
+        }  //FOR
+      }  //FOR
+    }  //FOR
     await wait(300000)  //PASS
-    pincodes.length && dates.length && yourAgeCategory && yourDose && vaccineFinder()
+    pincodes.length && dates.length && yourAgeCategory && yourDose && vaccineFinder()  //RECURSIVE CALL
   })()
   return "https://github.com/vipinkrishna"
 })()
