@@ -45,9 +45,10 @@
       for (date of dates) {
         let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pincode + "&date=" + date
         let response = await fetch(endpoint)
-        let result = await response.json()
+        // let result = await response.json()
+        let { sessions } = await response.json()
 
-        for (session of result.sessions) {
+        for (session of sessions) {
           const { date: datestamp, address, pincode, available_capacity, available_capacity_dose1, available_capacity_dose2, vaccine, min_age_limit } = session
           if (min_age_limit === yourAgeCategory && ((yourDose === "FIRST") ? available_capacity_dose1 : available_capacity_dose2) > 0) {
             console.log('================================================================')
@@ -60,15 +61,14 @@
             console.log("Available Capacity for DOSE 1: ", available_capacity_dose1)
             console.log("Available Capacity for DOSE 2: ", available_capacity_dose2)
             console.log("================================================================\n\n\n\n\n")
-            beep(100)
+            beep(2000)
             await wait(2000)  //SESSION
           }
         }
       }
     }
-    await wait(30000)  //PASS
+    await wait(300000)  //PASS
     pincodes.length && dates.length && yourAgeCategory && yourDose && vaccineFinder()
   })()
   return "https://github.com/vipinkrishna"
 })()
-
