@@ -21,15 +21,14 @@
   const wait = (milliseconds) => new Promise((settle) => setTimeout(settle, milliseconds))
 
   var audioCtx = new window.AudioContext
-  function beep() {
+  function beep(duration = 500) {
     var oscillator = audioCtx.createOscillator()
     var gainNode = audioCtx.createGain()
     oscillator.connect(gainNode)
     gainNode.connect(audioCtx.destination)
-    oscillator.frequency.value = 500
-    oscillator.onended = () => console.log('<Beep>')
+    oscillator.frequency.value = 700
     oscillator.start(audioCtx.currentTime)
-    oscillator.stop(audioCtx.currentTime + ((500) / 1000))
+    oscillator.stop(audioCtx.currentTime + (duration / 1000))
   }
 
   if (!pincodes.length) {
@@ -42,30 +41,29 @@
 
     session_counter = 1
 
-    for (i = 0; i < pincodes.length; i++) {
-      for (j = 0; j < dates.length; j++) {
-        let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pincodes[i] + "&date=" + dates[j]
+    for (pincode of pincodes) {
+      for (date of dates) {
+        let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pincode + "&date=" + date
         let response = await fetch(endpoint)
         let result = await response.json()
 
         for (session of result.sessions) {
-          const { date, address, pincode, available_capacity, available_capacity_dose1, available_capacity_dose2, vaccine, min_age_limit } = session
-
-          console.log(`<SESSION: ${session_counter++}>`)
-
+          const { date: datestamp, address, pincode, available_capacity, available_capacity_dose1, available_capacity_dose2, vaccine, min_age_limit } = session
           if (min_age_limit === yourAgeCategory && ((yourDose === "FIRST") ? available_capacity_dose1 : available_capacity_dose2) > 0) {
-            console.log(`==============(${yourDose} DOSE)(AGE:${min_age_limit})===============`)
-            console.log("Date: ", date)
+            console.log('================================================================')
+            console.log(`SESSION:${session_counter++} - ${yourDose} DOSE - AGE:${min_age_limit}`)
+            console.log('----------------------------------------------------------------')
+            console.log("Date: ", datestamp)
             console.log("Vaccine Name: ", vaccine)
             console.log("Address: ", address, " Pincode: ", pincode)
             console.log("Available Capacity: ", available_capacity)
             console.log("Available Capacity for DOSE 1: ", available_capacity_dose1)
             console.log("Available Capacity for DOSE 2: ", available_capacity_dose2)
-            console.log("=================================================")
-            beep()
+            console.log("================================================================\n\n\n\n\n")
+            beep(100)
+            await wait(2000)  //SESSION
           }
         }
-        await wait(3000)  //SESSION
       }
     }
     await wait(30000)  //PASS
