@@ -1,6 +1,6 @@
 // VACCINE FINDER VERSION 01
 // DEVELOPER: https://github.com/vipinkrishna
-// CopyLeft vipinkrishna - (Free Developer)
+// CopyLeft © vipinkrishna - (Free Developer)
 
 (function () {
 
@@ -35,19 +35,22 @@
     oscillator.stop(audioCtx.currentTime + (duration / 1000))
   }
 
+  // PADDING
+  let pad = (number) => (number <= 999 ? `00${number}`.slice(-3) : number.toString())
+
   if (!pincodes.length) {
     console.info('Missing "pincodes"...')
     return "https://github.com/vipinkrishna"
   }
 
   (async function vaccineFinder() {
-    console.log(`%c[PASS: ${counter++}]`, 'color: red')
+    console.log(`%c############################[%cPASS ${pad(counter++)}%c]#################################`, 'color: red', 'color: yellow', 'color: red')
 
     session_counter = 1
 
     for (pincode of pincodes) {
       for (date of dates) {
-        console.log(`%c${pincode} - %c${date}`, 'color: yellow','color: orange')
+        console.log(`%c${pincode} - %c${date}`, 'color: yellow', 'color: orange')
         let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pincode + "&date=" + date
         let response = await fetch(endpoint)
         let { sessions } = await response.json()
@@ -67,10 +70,11 @@
             console.log("%c================================================================\n\n", 'color: yellow')
             beep(2000)
           }  //IF
-          // await wait(2000)  //SESSION
         }  //FOR
+        await wait(1000)  //SESSION
       }  //FOR
     }  //FOR
+    console.log(`%c######################################################################\n\n`, 'color: red')
     await wait(300000)  //PASS
     pincodes.length && dates.length && yourAgeCategory && yourDose && vaccineFinder()  //RECURSIVE
   })()
