@@ -44,7 +44,7 @@
   }
 
   (async function vaccineFinder() {
-    console.log(`%c############################[%cPASS ${pad(counter++)}%c]#################################`, 'color: red', 'color: yellow', 'color: red')
+    console.log(`%c############################[%cPASS ${pad(counter++)}%c]################################`, 'color: red', 'color: yellow', 'color: red')
 
     session_counter = 1
 
