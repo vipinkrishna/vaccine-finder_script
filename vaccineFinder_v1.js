@@ -1,5 +1,4 @@
 (function () {
-
     // YOUR SETTINGS GOES HERE - PINCODES, AGE CATEGORY & DOSE
     const pincodes = [671531, 671316]  //[671531]  //[671531, 671316]
     let yourAgeCategory = 18  //18  //40  //45
@@ -20,15 +19,15 @@
     const wait = (milliseconds) => new Promise((settle) => setTimeout(settle, milliseconds))
 
     // GENERATES BEEP SOUND
-    var audioCtx = new window.AudioContext()
+    var context = new window.AudioContext()
     function beep(duration = 500) {
-        var oscillator = audioCtx.createOscillator()
-        var gainNode = audioCtx.createGain()
-        oscillator.connect(gainNode)
-        gainNode.connect(audioCtx.destination)
-        oscillator.frequency.value = 700
-        oscillator.start(audioCtx.currentTime)
-        oscillator.stop(audioCtx.currentTime + (duration / 1000))
+        var oscillator = context.createOscillator()
+        var gain = context.createGain()
+        oscillator.connect(gain)
+        gain.connect(context.destination)
+        oscillator.frequency.value = 800
+        oscillator.start(context.currentTime)
+        oscillator.stop(context.currentTime + (duration / 1000))
     }
 
     // PADDING
