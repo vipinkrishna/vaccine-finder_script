@@ -1,10 +1,11 @@
 (function () {
     // YOUR SETTINGS GOES HERE - PINCODES, AGE CATEGORY & DOSE
-    const pincodes = [671531, 671316]  //[671531]  //[671531, 671316]
+	const pincodes = [671531, 671316]  //[671531]  //[671531, 671316]
     let yourAgeCategory = 18  //18  //40  //45
     let yourDose = "FIRST"  //"FIRST"  //"SECOND"
+    let fee = "ANY"  //"FREE"  //"PAID"  //"ANY"
 
-    // PICKS DATES FROM TODAY UPTO 8 DAYS
+    // PICKS DATES FROM TODAY UPTO 3 DAYS
     let today = new Date()
     const dates = []
     for (let i = 0; i < 3; i++) {
@@ -25,7 +26,7 @@
         var gain = context.createGain()
         oscillator.connect(gain)
         gain.connect(context.destination)
-        oscillator.frequency.value = 800
+        oscillator.frequency.value = 2500
         oscillator.start(context.currentTime)
         oscillator.stop(context.currentTime + (duration / 1000))
     }
@@ -59,22 +60,23 @@
                 let { sessions } = await response.json()
 
                 for (let session of sessions) {
-                    const { date: datestamp, address, pincode, available_capacity, available_capacity_dose1, available_capacity_dose2, vaccine, min_age_limit } = session
-                    if (min_age_limit === yourAgeCategory && ((yourDose === "FIRST") ? available_capacity_dose1 : available_capacity_dose2) > 0) {
+                    const { date: datestamp, address, name, pincode, available_capacity_dose1, available_capacity_dose2, vaccine, min_age_limit, fee_type } = session
+                    if (min_age_limit === yourAgeCategory && (fee === "ANY" ? true : fee_type.toUpperCase() === fee) && ((yourDose === "FIRST") ? available_capacity_dose1 : available_capacity_dose2) > 0) {
                         console.log('\n%c================================================================', 'color: yellow')
                         console.log(`SESSION:${session_counter++} - ${yourDose} DOSE - AGE:${min_age_limit}`)
                         console.log('%c================================================================', 'color: yellow')
                         console.log("Date: %c" + datestamp, 'color: orange')
                         console.log("Vaccine Name: %c" + vaccine, 'color: cyan')
+                        console.log("Center: %c" + name, 'color: magenta')
                         console.log("Address: " + address + " Pincode: %c" + pincode, 'color: yellow')
-                        console.log("Available Capacity: ", available_capacity)
                         console.log("Available Capacity for DOSE 1: ", available_capacity_dose1)
                         console.log("Available Capacity for DOSE 2: ", available_capacity_dose2)
+                        console.log("Fee: %c" + fee_type.toUpperCase(), 'color: ' + ((fee_type === "Paid") ? "red" : "lime"))
                         console.log("%c================================================================\n\n", 'color: yellow')
-                        beep(2000)
+                        beep(3000)
                     }  //IF
                 }  //FOR
-                await wait(200)  //SESSION
+                await wait(50)  //SESSION
             }  //FOR
         }  //FOR
         console.log(`%c######################################################################\n\n`, 'color: red')
